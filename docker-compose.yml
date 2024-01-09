@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./config.json:/app/config/production.json
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+  db:
+    image: 'jc21/mariadb-aria:10.4.15'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mypassword'
+      MYSQL_DATABASE: 'namedb'
+      MYSQL_USER: 'usermysql'
+      MYSQL_PASSWORD: 'mypass'
+    volumes:
+      - ./data/mysql:/var/lib/
+  
+    networks:
+        - nginx-proxy-manager-network
+  
+networks:
+  nginx-proxy-manager-network:
+    driver: bridge
+#localhost:81
+#admin@example.com
+#changeme
